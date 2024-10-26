@@ -1,50 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 
-const WeatherApp = () => {
-  // Initial location state
-  const [location, setLocation] = useState('New York');
-  
-  // State to store weather data
-  const [weatherData, setWeatherData] = useState(null);
-
-  // Handler to update the location state
-  const handleLocationChange = (event) => {
-    setLocation(event.target.value);
-  };
-
-  // Fetch weather data when the component mounts or when location changes
-  useEffect(() => {
-    // Simulate an API call to fetch weather data
-    const fetchWeatherData = async () => {
-      const data = `Weather data for ${location}`;
-      setWeatherData(data);
+class Clock extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: new Date()
     };
+  }
 
-    fetchWeatherData();
-  }, [location]);
+  componentDidMount() {
+    // Set up the interval to update the time every second
+    this.intervalId = setInterval(() => {
+      this.tick();
+    }, 1000);
+  }
 
-  return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Weather Application</h1>
-      
-      {/* Display the current location */}
-      <p>Current Location: {location}</p>
-      
-      {/* Input form to update the location */}
-      <input
-        type="text"
-        value={location}
-        onChange={handleLocationChange}
-        placeholder="Enter a location"
-        style={{ padding: '10px', fontSize: '16px', width: '300px' }}
-      />
-      
-      {/* Display the weather data */}
-      <div style={{ marginTop: '20px' }}>
-        {weatherData ? <p>{weatherData}</p> : <p>Loading...</p>}
+  componentWillUnmount() {
+    // Clean up the interval when the component is unmounted
+    clearInterval(this.intervalId);
+  }
+
+  tick() {
+    this.setState({
+      time: new Date()
+    });
+  }
+
+  render() {
+    const { time } = this.state;
+    return (
+      <div>
+        <h1>Current Time</h1>
+        <p>{time.toLocaleTimeString()}</p>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
-export default WeatherApp;
+export default Clock;
